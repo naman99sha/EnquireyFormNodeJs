@@ -1,13 +1,15 @@
 import { useState } from "react"
+import axios from 'axios'
 
 function EnquiryForm() {
+  const defaultEnquiry = {
+    name: "",
+    email: "",
+    category: "Service Request",
+    message: "",
+  }
   const [enquiryForm, setEnquiryForm] = useState(
-    {
-      name: "",
-      email: "",
-      category: "Service Request",
-      message: "",
-    }
+    defaultEnquiry
   );
 
   const handleFormChange = (e) => {
@@ -21,7 +23,17 @@ function EnquiryForm() {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    console.log(enquiryForm);
+    axios.post(`${import.meta.env.VITE_API_BASE_URL}/enquiry`, enquiryForm, {
+      headers: {
+        "Content-Type": "application/json"
+      },
+    }).then(() => {
+      setEnquiryForm(defaultEnquiry)
+      alert("Enquiry Submitted successfully")
+    }).catch((err) => {
+      console.error(err)
+      alert("Couldn't submit form")
+    })
   }
   return (
     <div className="flex items-center justify-center min-h-screen p-4 bg-gray-700">
